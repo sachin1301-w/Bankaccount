@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f1f1f1;
+      margin: 0;
+    }
+
+    header {
+      background: #4CAF50;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 40px;
+      gap: 40px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      width: 350px;
+    }
+
+    input, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #388e3c;
+    }
+
+    #log {
+      margin: 20px auto;
+      background: #eef;
+      padding: 15px;
+      max-width: 800px;
+      border-left: 4px solid #4CAF50;
+      border-radius: 5px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div id="user-info">Welcome</div>
+    <button onclick="logout()" style="background:#f44336;color:white;padding:8px 12px;border:none;border-radius:5px;">Logout</button>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h3>Transaction</h3>
+      <input type="number" id="amount" placeholder="Enter Amount" />
+      <button onclick="deposit()">Deposit</button>
+      <button onclick="withdraw()">Withdraw</button>
+      <button onclick="showBalance()">Show Balance</button>
+      <button onclick="viewHistory()">View Transaction History</button>
+    </div>
+  </div>
+
+  <div id="log">Please make a transaction.</div>
+
+  <script>
+    let users = JSON.parse(localStorage.getItem("users")) || {};
+    let currentUser = localStorage.getItem("currentUser");
+
+    if (!currentUser || !users[currentUser]) {
+      alert("Not logged in!");
+      window.location.href = "login.html";
+    }
+
+    const userData = users[currentUser];
+    document.getElementById("user-info").innerText = `👤 ${currentUser} | 💰 ₹${userData.balance}`;
+
+    function updateStorage() {
+      users[currentUser] = userData;
+      localStorage.setItem("users", JSON.stringify(users));
+      document.getElementById("user-info").innerText = `👤 ${currentUser} | 💰 ₹${userData.balance}`;
+    }
+
+    function deposit() {
+      const amount = parseFloat(document.getElementById("amount").value);
+      if (isNaN(amount) || amount <= 0) {
+        log("Enter valid deposit amount.");
+        return;
+      }
+      userData.balance += amount;
+      userData.history.push({ type: "Deposit", amount, time: new Date().toLocaleString() });
+      updateStorage();
+      log(`Deposited ₹${amount}`);
+    }
+
+    function withdraw() {
+      const amount = parseFloat(document.getElementById("amount").value);
+      if (isNaN(amount) || amount <= 0) {
+        log("Enter valid withdrawal amount.");
+        return;
+      }
+      if (amount > userData.balance) {
+        log("❌ Not enough balance.");
+        return;
+      }
+      userData.balance -= amount;
+      userData.history.push({ type: "Withdraw", amount, time: new Date().toLocaleString() });
+      updateStorage();
+      log(`Withdrew ₹${amount}`);
+    }
+
+    function showBalance() {
+      log(`Current balance: ₹${userData.balance}`);
+    }
+
+    function viewHistory() {
+      const history = userData.history.map(h => `${h.time} - ${h.type}: ₹${h.amount}`).join('\n');
+      log(history || "No transactions yet.");
+    }
+
+    function logout() {
+      localStorage.removeItem("currentUser");
+      window.location.href = "login.html";
+    }
+
+    function log(msg) {
+      document.getElementById("log").innerText = msg;
+    }
+  </script>
+
+</body>
+</html>

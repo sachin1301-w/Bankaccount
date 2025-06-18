@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: linear-gradient(to right, #c9d6ff, #e2e2e2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      width: 300px;
+    }
+    h2 { margin-top: 0; }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #43a047;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h2>Create Account</h2>
+    <input type="text" id="name" placeholder="Enter Name" />
+    <input type="password" id="password" placeholder="Set Password" />
+    <input type="number" id="balance" placeholder="Initial Balance" />
+    <button onclick="register()">Register</button>
+    <p>Already have an account? <a href="login.html">Login</a></p>
+  </div>
+
+  <script>
+    let users = JSON.parse(localStorage.getItem("users")) || {};
+
+    function register() {
+      const name = document.getElementById('name').value.trim();
+      const password = document.getElementById('password').value;
+      const balance = parseFloat(document.getElementById('balance').value);
+
+      if (!name || !password || isNaN(balance)) {
+        alert("Fill all fields.");
+        return;
+      }
+
+      if (users[name]) {
+        alert("User already exists!");
+        return;
+      }
+
+      users[name] = {
+        password,
+        balance,
+        history: []
+      };
+
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Account created!");
+      window.location.href = "login.html";
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    background: #f1f1f1;
+  }
+  body.dark {
+    background: #121212;
+    color: white;
+  }
+  .box {
+    max-width: 400px;
+    margin: 40px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  body.dark .box {
+    background: #2c2c2c;
+    color: white;
+  }
+  input, button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+  }
+  button:hover {
+    background: #388e3c;
+  }
+  @media screen and (max-width: 600px) {
+    .box {
+      margin: 10px;
+      padding: 15px;
+    }
+  }
+  

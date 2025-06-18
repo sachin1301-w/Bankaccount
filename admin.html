@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="light">
+  <div class="box">
+    <h2>Admin Login</h2>
+    <input type="password" id="adminPass" placeholder="Enter Admin Password" />
+    <button onclick="adminLogin()">Login</button>
+  </div>
+  <div class="box" id="adminPanel" style="display:none;">
+    <h2>All Users</h2>
+    <pre id="userData"></pre>
+    <button onclick="resetAll()">Reset All Accounts</button>
+  </div>
+  <script>
+    function adminLogin() {
+      const pass = document.getElementById("adminPass").value;
+      if (pass === "admin123") {
+        document.getElementById("adminPanel").style.display = "block";
+        const users = JSON.parse(localStorage.getItem("users")) || {};
+        let output = "";
+        for (let user in users) {
+          output += user + " - Balance: ₹" + users[user].balance + "\\n";
+        }
+        document.getElementById("userData").innerText = output || "No users found.";
+      } else {
+        alert("Invalid admin password.");
+      }
+    }
+    function resetAll() {
+      if (confirm("Are you sure you want to delete all data?")) {
+        localStorage.clear();
+        alert("All data cleared.");
+        location.reload();
+      }
+    }
+  </script>
+</body>
+</html>
